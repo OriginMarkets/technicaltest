@@ -30,15 +30,24 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
+
+PROJECT_APPS = [
+    'bonds'
+]
+
+EXTERNAL_APPS = [
     'rest_framework'
 ]
+
+INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + EXTERNAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -119,3 +128,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# should have some segregation of settings but not going to focus on that here
+LEI_LOOKUP_URL = 'https://leilookup.gleif.org/api/v2/leirecords'

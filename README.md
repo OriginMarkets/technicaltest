@@ -12,7 +12,8 @@ We would like you to implement an api to: ingest some data representing bonds, q
 #### Project Quickstart
 
 Inside a virtual environment running Python 3:
-- `pip install -r requirement.txt`
+- `pip install -r requirements.txt`
+- `./manage.py migrate` to set up database.
 - `./manage.py runserver` to run server.
 - `./manage.py test` to run tests.
 
