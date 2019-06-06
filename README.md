@@ -17,6 +17,18 @@ Inside a virtual environment running Python 3:
 - `./manage.py runserver` to run server.
 - `./manage.py test` to run tests.
 
+To create test users and interact with API in browser run django shell:
+
+- `./manage.py shell`
+
+And inside create user with:
+```
+>>> from django.contrib.auth.models import User
+>>> u = User.objects.create(username='customer3')
+>>> u.set_password('foobar123')
+>>> u.save()
+```
+
 #### API
 
 We should be able to send a request to:
