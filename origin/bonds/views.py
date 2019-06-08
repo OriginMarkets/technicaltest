@@ -3,8 +3,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.serializers import ModelSerializer
 from rest_framework.reverse import reverse
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from bonds.models import Bond
+from django.conf import settings
 
 
 def error(message, status):
@@ -14,20 +18,29 @@ def error(message, status):
 class BondSerializer(ModelSerializer):
     class Meta:
         model = Bond
-        fields = '__all__'
+        exclude = ('user',)
+        depth = 0
 
 
 class BondViewSet(object):
 
     class BondViewList(APIView):
+        authentication_classes = (SessionAuthentication, TokenAuthentication)
+        permission_classes = (IsAuthenticated,)
 
         def get(self, request):
             legal_name_filter = request.GET.get("legal_name", None)
             if legal_name_filter:
-                bonds = Bond.objects.filter(legal_name__icontains=legal_name_filter)
+                bonds = Bond.objects.filter(
+                    legal_name__icontains=legal_name_filter,
+                    user=request.user
+                )
             else:
-                bonds = Bond.objects.all()
-            return Response(bonds.values(), status=status.HTTP_200_OK)
+                bonds = Bond.objects.filter(
+                    user=request.user
+                )
+            serializer_list = [BondSerializer(bond).data for bond in bonds]
+            return Response(serializer_list, status=status.HTTP_200_OK)
 
         def post(self, request):
             try:
@@ -41,7 +54,7 @@ class BondViewSet(object):
                             'Key {} is invalid or readonly'.format(request_key),
                             status=status.HTTP_400_BAD_REQUEST
                         )
-                bond = Bond(**request.data)
+                bond = Bond(user=request.user,**request.data)
                 bond.save()
                 serializer = BondSerializer(bond)
                 headers = {'Location': reverse('bonds-id', (bond.isin,))}
@@ -55,10 +68,12 @@ class BondViewSet(object):
                 return error(str(e), status=status.HTTP_400_BAD_REQUEST)
 
     class BondViewDetail(APIView):
+        authentication_classes = (SessionAuthentication, BasicAuthentication)
+        permission_classes = (IsAuthenticated,)
 
         def get(self, request, isin):
             try:
-                bond = Bond.objects.get(isin=isin)
+                bond = Bond.objects.get(isin=isin, user=request.user)
                 serializer = BondSerializer(bond)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             except ObjectDoesNotExist:
@@ -66,7 +81,7 @@ class BondViewSet(object):
 
         def delete(self, request, isin):
             try:
-                bond = Bond.objects.get(isin=isin)
+                bond = Bond.objects.get(isin=isin, user=request.user)
                 bond.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
             except ObjectDoesNotExist:
@@ -75,7 +90,7 @@ class BondViewSet(object):
         def put(self, request, isin):
             try:
                 request_values = request.data.items()
-                bond = Bond.objects.get(isin=isin)
+                bond = Bond.objects.get(isin=isin, user=request.user)
                 for request_key, request_value_update in request_values:
                     if (
                         hasattr(bond, request_key) and

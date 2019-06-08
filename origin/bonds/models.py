@@ -2,6 +2,7 @@ import re
 from iso4217 import Currency
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
 from pygleif import GLEIF
 
 
@@ -65,3 +66,4 @@ class Bond(models.Model):
     maturity = models.DateField()
     lei = models.CharField(max_length=20, validators=[LeiValidator.validate])
     legal_name = models.CharField(max_length=256)
+    user = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING)
