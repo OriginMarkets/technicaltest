@@ -2,6 +2,7 @@ import json
 import logging
 import traceback
 
+from django.contrib.auth.models import User
 from django.db import models
 from djmoney.models.fields import CurrencyField
 
@@ -17,6 +18,7 @@ class Bond(models.Model):
     maturity = models.DateField()
     lei = models.CharField(max_length=250)
     legal_name = models.CharField(max_length=250, null=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
 
     def save(self, *args, **kwargs):
         # looks up legal name on GLEIF API

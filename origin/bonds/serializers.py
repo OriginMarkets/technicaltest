@@ -4,6 +4,7 @@ from . import models
 
 
 class BondSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.Bond
         fields = (
@@ -13,4 +14,5 @@ class BondSerializer(serializers.ModelSerializer):
             'maturity',
             'lei',
             'legal_name',
+            'user',
         )

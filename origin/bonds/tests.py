@@ -1,18 +1,21 @@
+from django.contrib.auth.models import User
 from django.urls import reverse
-from rest_framework.test import APISimpleTestCase
+
+from rest_framework.authtoken.models import Token
+from rest_framework.test import APISimpleTestCase, APIClient, force_authenticate
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from . import models
 
 
-class HelloWorld(APISimpleTestCase):
-    def test_root(self):
-        resp = self.client.get("/")
-        assert resp.status_code == 200
-
-
 class BondsTests(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_superuser('admin', 'admin@admin.com', 'admin123')
+        self.token = Token.objects.create(user=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
+
     def test_bond_list(self):
         url = reverse('bonds')
         response = self.client.get(url)
