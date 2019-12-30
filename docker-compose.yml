@@ -1,0 +1,26 @@
+version: "3.7"
+
+x-app: &default-app
+  build:
+    context: .
+  image: origin:latest
+  env_file: .env
+  volumes:
+    - ".:/app"
+  ports:
+    - "8000:8000"
+
+services:
+  app:
+    <<: *default-app
+    command: |
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+
+  tests:
+    <<: *default-app
+    command: |
+      sh -e -c "pytest tests &&
+                flake8 . &&
+                mypy . &&
+                black --check --diff ."
