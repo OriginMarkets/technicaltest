@@ -10,12 +10,6 @@ def api_client():
 
 
 @pytest.fixture
-def api_client():
-    from rest_framework.test import APIClient
-    return APIClient()
-
-
-@pytest.fixture
 def test_password():
     return 'strong-test-pass'
 
