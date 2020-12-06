@@ -1,6 +1,13 @@
-"""This is pytest file that contains fixtures for all the pytest tests"""
+"""This is the pytest file containing fixtures for all the pytest tests"""
 import pytest
+from pytest_factoryboy import register
+from rest_framework.authtoken.models import Token
 import uuid
+
+from bonds.factories import BondFactory
+
+
+register(BondFactory)
 
 
 @pytest.fixture
@@ -11,7 +18,7 @@ def api_client():
 
 @pytest.fixture
 def test_password():
-    return 'strong-test-pass'
+    return 'johnpassword'
 
 
 @pytest.fixture
@@ -26,7 +33,16 @@ def create_user(db, django_user_model, test_password):
 
 
 @pytest.fixture
-def api_client_auth(
+def get_or_create_token(db, create_user):
+    def get(**kwargs):
+        user = create_user()
+        token, _ = Token.objects.get_or_create(user=user)
+        return user, token
+    return get
+
+
+@pytest.fixture
+def api_client_forced_auth(
         db, create_user, api_client
 ):
     user = create_user()

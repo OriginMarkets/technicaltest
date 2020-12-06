@@ -2,6 +2,7 @@ import requests
 
 
 def get_legalname(lei: str):
+    """Get legalname from lei"""
     try:
         response = requests.get(
             "https://leilookup.gleif.org/api/v2/leirecords", params={"lei": lei}
