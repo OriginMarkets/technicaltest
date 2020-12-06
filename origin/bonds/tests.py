@@ -1,7 +1,14 @@
-from rest_framework.test import APISimpleTestCase
+import pytest
+from rest_framework import status
 
 
-class HelloWorld(APISimpleTestCase):
-    def test_root(self):
-        resp = self.client.get("/")
-        assert resp.status_code == 200
+@pytest.mark.django_db
+def test_root(api_client_auth):
+    resp = api_client_auth.get("/")
+    assert resp.status_code == status.HTTP_200_OK
+
+
+@pytest.mark.django_db
+def test_unauthorized_user(api_client):
+    resp = api_client.get("/")
+    assert resp.status_code == status.HTTP_401_UNAUTHORIZED
