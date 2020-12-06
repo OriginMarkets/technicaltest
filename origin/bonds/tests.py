@@ -41,6 +41,7 @@ def test_list_bonds_by_legal_name(api_client, get_or_create_token, bond_factory)
     user, token = get_or_create_token()
     api_client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
     bond = bond_factory(user=user)
+
     resp = api_client.get(url, data={'legal_name': bond.legal_name})
 
     assert resp.status_code == status.HTTP_200_OK

@@ -30,6 +30,6 @@ class BondFactory(factory.django.DjangoModelFactory):
     size = random.randint(1, 10000)
     currency = 'EUR'
     maturity = datetime.date.today()
-    lei = random.choice(('21380016UZS36PC85Y22', '894500TFYBOUIM1WUN34'))
+    lei = random.choice(list(LEI_SAMPLES.keys()))
 
     user = factory.SubFactory(UserFactory)
