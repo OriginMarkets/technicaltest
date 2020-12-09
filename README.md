@@ -1,29 +1,14 @@
-# Origin Markets Backend Test
+# Origin
 
-### Spec:
-
-We would like you to implement an api to: ingest some data representing bonds, query an external api for some additional data, store the result, and make the resulting data queryable via api.
-- Fork this hello world repo leveraging Django & Django Rest Framework. (If you wish to use something else like flask that's fine too.)
-- Please pick and use a form of authentication, so that each user will only see their own data. ([DRF Auth Options](https://www.django-rest-framework.org/api-guide/authentication/#api-reference))
-- We are missing some data! Each bond will have a `lei` field (Legal Entity Identifier). Please use the [GLEIF API](https://www.gleif.org/en/lei-data/gleif-lei-look-up-api/access-the-api) to find the corresponding `Legal Name` of the entity which issued the bond.
-- If you are using a database, SQLite is sufficient.
-- Please test any additional logic you add.
-
-#### Project Quickstart
-
-Inside a virtual environment running Python 3:
-- `pip install -r requirement.txt`
-- `./manage.py runserver` to run server.
-- `./manage.py test` to run tests.
-
-#### API
+## API
 
 We should be able to send a request to:
 
 `POST /bonds/`
 
 to create a "bond" with data that looks like:
-~~~
+
+```json
 {
     "isin": "FR0000131104",
     "size": 100000000,
@@ -31,14 +16,15 @@ to create a "bond" with data that looks like:
     "maturity": "2025-02-28",
     "lei": "R0MUWSFPU8MPRO8K5P83"
 }
-~~~
----
+```
+
 We should be able to send a request to:
 
 `GET /bonds/`
 
 to see something like:
-~~~
+
+```json
 [
     {
         "isin": "FR0000131104",
@@ -50,8 +36,128 @@ to see something like:
     },
     ...
 ]
-~~~
-We would also like to be able to add a filter such as:
-`GET /bonds/?legal_name=BNPPARIBAS`
+```
 
-to reduce down the results.
+## Features in development
+
+* Token based authentication
+* Filters
+* Logging
+* Throttling
+* Pagination
+* BDD testing
+* Sphinx integration
+
+## Workflow
+
+### Linting
+
+```bash
+sh scripts/lint.sh
+```
+
+### Formatting
+
+```bash
+sh scripts/format.sh
+```
+
+### Testing
+
+```bash
+pytest
+```
+
+### Serving
+
+```bash
+sh scripts/dev.runserver.sh
+```
+
+For a clean database:
+
+```bash
+sh scripts/dev.runserver.sh -c
+```
+
+## Frontend
+
+Small angular app:
+
+* Conusmes the frontend
+
+* Embeds the admin site
+
+### Linting
+
+```bash
+grunt lint
+```
+
+### Formatting
+
+```bash
+grunt format
+```
+
+### Testing
+
+```bash
+grunt unitTests
+grunt integrationTests
+grunt e2eTests
+```
+### Running
+
+```bash
+grunt serveDev
+```
+
+## DevOps
+
+### Building images
+
+```bash
+sh builder/prod.build.sh
+```
+
+### Deploying stacks
+
+```bash
+docker stack deploy prod -c prod.docker-compose.yml
+```
+
+### Terraform
+
+```bash
+terraform plan
+terraform apply
+```
+
+### Ansible
+
+```bash
+ansible-playbook -i inventory/main.py playbooks/main.yml
+```
+
+### Naming conventions
+
+Subprojects:
+
+- origin
+
+  - Django project
+
+- origin-app
+  
+  - Angular app
+
+- origin-ops
+  
+  - Dockerfiles
+  - Ansible playbooks
+  - Terraform configuration
+
+### Author
+
+- **Joel Lefkowitz** - _Initial work_ - [Joel Lefkowitz](https://github.com/JoelLefkowitz)
