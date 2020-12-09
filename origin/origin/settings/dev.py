@@ -4,7 +4,7 @@ from .base import *  # noqa
 
 DEBUG = True
 
-# NOTE: This random string is not safe for production
+#  NOTE: This random string is not safe for production
 SECRET_KEY = random_string(20)
 
 ALLOWED_HOSTS = ["*"]
@@ -17,8 +17,8 @@ INSTALLED_APPS += [
 ]
 
 GRAPH_MODELS = {
-  'all_applications': True,
-  'group_models': True,
+    "all_applications": True,
+    "group_models": True,
 }
 
 MIDDLEWARE += [

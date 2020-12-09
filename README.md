@@ -2,6 +2,8 @@
 
 ## API
 
+![API screenshot][api_screenshot]
+
 We should be able to send a request to:
 
 `POST /bonds/`
@@ -161,3 +163,5 @@ Subprojects:
 ### Author
 
 - **Joel Lefkowitz** - _Initial work_ - [Joel Lefkowitz](https://github.com/JoelLefkowitz)
+
+[api_screenshot]: https://github.com/JoelLefkowitz/PythonTechnicalTest/API.png

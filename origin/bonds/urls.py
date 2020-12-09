@@ -1,3 +1,8 @@
-# from .views import BondViewSet
+from django.urls import include, path
+from .views import BondViewSet
 
-urlpatterns = []
+urlpatterns = [
+    path("", BondViewSet.as_view(
+        {'get': 'list', "post": "create"}
+    ))
+]
