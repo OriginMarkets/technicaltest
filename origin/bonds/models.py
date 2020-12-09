@@ -5,7 +5,7 @@ from django.db import models
 
 
 class Bond(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
     isin = models.CharField(unique=True, max_length=12)
     size = models.IntegerField()
     currency = models.CharField(max_length=3, choices=get_currency_choices())

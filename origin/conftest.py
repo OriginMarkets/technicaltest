@@ -1,7 +1,10 @@
 """This is the pytest file containing fixtures for all the pytest tests"""
+from typing import Callable, Tuple
 import pytest
 from pytest_factoryboy import register
 from rest_framework.authtoken.models import Token
+from rest_framework.test import APIClient
+from django.contrib.auth.models import User
 import uuid
 
 from bonds.factories import BondFactory
@@ -11,8 +14,7 @@ register(BondFactory)
 
 
 @pytest.fixture
-def api_client():
-    from rest_framework.test import APIClient
+def api_client() -> APIClient:
     return APIClient()
 
 
@@ -22,7 +24,7 @@ def test_password():
 
 
 @pytest.fixture
-def create_user(db, django_user_model, test_password):
+def create_user(db, django_user_model, test_password) -> Callable[[], User]:
     def make_user(**kwargs):
         kwargs['password'] = test_password
         if 'username' not in kwargs:
@@ -33,7 +35,7 @@ def create_user(db, django_user_model, test_password):
 
 
 @pytest.fixture
-def get_or_create_token(db, create_user):
+def get_or_create_token(db, create_user) -> Callable[[], Tuple[User, Token]]:
     def get(**kwargs):
         user = create_user()
         token, _ = Token.objects.get_or_create(user=user)
@@ -44,7 +46,7 @@ def get_or_create_token(db, create_user):
 @pytest.fixture
 def api_client_forced_auth(
         db, create_user, api_client
-):
+) -> APIClient:
     user = create_user()
     api_client.force_authenticate(user=user)
     yield api_client
