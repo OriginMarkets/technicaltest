@@ -17,9 +17,9 @@ def test_unauthorized_user(api_client):
 
 
 @pytest.mark.django_db
-def test_list_bonds(api_client, get_or_create_token, bond_factory):
+def test_list_bonds(api_client, user_and_token, bond_factory):
     url = reverse('bonds')
-    user, token = get_or_create_token()
+    user, token = user_and_token()
     api_client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
     bond = bond_factory(user=user)
 
@@ -36,9 +36,9 @@ def test_list_bonds(api_client, get_or_create_token, bond_factory):
 
 
 @pytest.mark.django_db
-def test_list_bonds_by_legal_name(api_client, get_or_create_token, bond_factory):
+def test_list_bonds_by_legal_name(api_client, user_and_token, bond_factory):
     url = reverse('bonds')
-    user, token = get_or_create_token()
+    user, token = user_and_token()
     api_client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
     bond = bond_factory(user=user)
 
@@ -55,10 +55,10 @@ def test_list_bonds_by_legal_name(api_client, get_or_create_token, bond_factory)
 
 
 @pytest.mark.django_db
-def test_list_bonds_user_isolation(api_client, get_or_create_token, bond_factory):
+def test_list_bonds_user_isolation(api_client, user_and_token, bond_factory):
     url = reverse('bonds')
-    user_logged_in, token = get_or_create_token()
-    user2, _ = get_or_create_token()
+    user_logged_in, token = user_and_token()
+    user2, _ = user_and_token()
     api_client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
     bond = bond_factory(user=user_logged_in, lei='21380016UZS36PC85Y22')
     bond2 = bond_factory(user=user_logged_in, lei='21380016UZS36PC85Y22')
